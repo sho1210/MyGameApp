@@ -1,0 +1,22 @@
+{
+  "modelDownload": {
+    "title": "Translation Model Download",
+    "status": "Status",
+    "currentTask": "Current Task",
+    "stage": "Stage",
+    "statusError": "Error",
+    "statusCompleted": "Completed",
+    "statusDependencies": "Installing Dependencies",
+    "statusPreparing": "Preparing",
+    "statusDownloading": "Downloading",
+    "statusChecking": "Checking",
+    "stageDependencies": "Installing Python Dependencies",
+    "stagePreparing": "Preparing Download",
+    "stageDownloading": "Downloading Model",
+    "stageTokenizer": "Downloading Tokenizer",
+    "stageModel": "Downloading Model",
+    "stageCompleted": "Download Completed",
+    "stageError": "Download Failed",
+    "stageChecking": "Checking Environment"
+  }
+} 

@@ -1,0 +1,74 @@
+{
+  "appId": "com.yourcompany.mygameapp",
+  "productName": "MyGameApp",
+  "directories": {
+    "output": "release",
+    "buildResources": "build"
+  },
+  "files": [
+    "dist/**/*",
+    "main.js",
+    "preload.js",
+    "utils/**/*",
+    "license.txt"
+  ],
+  "extraResources": [
+    {
+      "from": "utils",
+      "to": "app/utils",
+      "filter": ["*.py"]
+    },
+    {
+      "from": "dist/utils",
+      "to": "app/utils",
+      "filter": ["*.py"]
+    },
+    {
+      "from": "node_modules/better-sqlite3",
+      "to": "node_modules/better-sqlite3"
+    }
+  ],
+  "asarUnpack": [
+    "utils/**/*",
+    "dist/utils/**/*",
+    "node_modules/better-sqlite3/**/*"
+  ],
+  "win": {
+    "target": [
+      "nsis"
+    ],
+    "icon": "src/assets/icon.ico"
+  },
+  "mac": {
+    "target": [
+      "dmg"
+    ],
+    "icon": "src/assets/icon.icns"
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ],
+    "icon": "src/assets/icon.png"
+  },
+  "nsis": {
+    "oneClick": false,
+    "runAfterFinish": false,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "src/assets/icon.ico",
+    "uninstallerIcon": "src/assets/icon.ico",
+    "installerHeaderIcon": "src/assets/icon.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "${productName}",
+    "include": "installer.nsh",
+    "script": null,
+    "packElevateHelper": true,
+    "perMachine": false,
+    "differentialPackage": false,
+    "guid": "your-app-guid-here",
+    "deleteAppDataOnUninstall": true
+  },
+  "publish": null
+}

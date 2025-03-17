@@ -1,0 +1,22 @@
+{
+  "modelDownload": {
+    "title": "翻译模型下载",
+    "status": "状态",
+    "currentTask": "当前任务",
+    "stage": "阶段",
+    "statusError": "错误",
+    "statusCompleted": "已完成",
+    "statusDependencies": "安装依赖中",
+    "statusPreparing": "准备中",
+    "statusDownloading": "下载中",
+    "statusChecking": "检查中",
+    "stageDependencies": "安装Python依赖",
+    "stagePreparing": "准备下载",
+    "stageDownloading": "下载模型中",
+    "stageTokenizer": "下载分词器",
+    "stageModel": "下载模型",
+    "stageCompleted": "下载完成",
+    "stageError": "下载失败",
+    "stageChecking": "检查环境"
+  }
+} 
