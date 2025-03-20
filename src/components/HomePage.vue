@@ -1,7 +1,6 @@
 <template>
   <div class="home-page">
     <div class="header">
-      <h1>游戏库</h1>
       <div class="sort-controls">
         <span>排序方式：</span>
         <select v-model="sortMethod" @change="sortGames">
@@ -232,8 +231,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: -10px;
-  margin-bottom: -17px;
+  margin-top: 0px;
+  padding-top: 15px;
+  margin-bottom: 15px;
   padding-left: 20px;
   padding-right: 20px;
 }
