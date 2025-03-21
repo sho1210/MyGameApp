@@ -6,7 +6,7 @@ import SettingsPage from '../components/SettingsPage.vue';
 import GameInfo from '../components/GameInfo.vue';
 
 const routes = [
-  { path: '/', component: Home }, // 确保路径无重复定义
+  { path: '/', component: Home, meta: { keepAlive: true } }, // 确保路径无重复定义
   { path: '/info', component: GameInfo },
   { path: '/settings', component: SettingsPage },
   { path: '/manage', component: GameManager },

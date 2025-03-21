@@ -1,6 +1,7 @@
 <template>
   <div class="home-page">
     <div class="header">
+      <h1>游戏库</h1>
       <div class="sort-controls">
         <span>排序方式：</span>
         <select v-model="sortMethod" @change="sortGames">
@@ -239,7 +240,7 @@ export default {
 }
 
 .header h1 {
-  font-size: 30px;
+  font-size: 0px;
   font-weight: 500;
   letter-spacing: -0.5px;
   color: var(--text-primary);
