@@ -68,7 +68,7 @@
     "perMachine": false,
     "differentialPackage": false,
     "guid": "your-app-guid-here",
-    "deleteAppDataOnUninstall": true
+    "deleteAppDataOnUninstall": false
   },
   "publish": null
 }

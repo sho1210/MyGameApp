@@ -1,7 +1,7 @@
 {
   "name": "mygameapp",
   "private": true,
-  "version": "2.0.6",
+  "version": "2.0.7",
   "type": "commonjs",
   "main": "main.js",
   "scripts": {
@@ -30,7 +30,7 @@
       "perMachine": false,
       "differentialPackage": true,
       "guid": "your-app-guid-here",
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": false
     },
     "appId": "com.gameapp.id",
     "productName": "mygameapp",

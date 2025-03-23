@@ -21,7 +21,7 @@
 
 /* 深色主题 */
 body.dark-mode {
-  --bg-primary: #48484c;
+  --bg-primary: #292b2ff7;;
   --bg-secondary: #3b3838;
   --bg-transparent: rgba(0, 0, 0, 0.05);
   --bg-primary-transparent: rgba(0, 0, 0, 0.3);

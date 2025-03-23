@@ -232,9 +232,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0px;
-  padding-top: 15px;
-  margin-bottom: 15px;
+  padding-top: 5px;
+  margin-bottom: -5px;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -294,43 +293,53 @@ export default {
 
 .card {
   width: 136px;
-  height: 204px;
+  height: 205px;
   margin-top: 11px;
   margin-bottom: 11px;
   margin-left: 21px;
   margin-right: 19px;
   /* 设置视距 */
   perspective: 1000px;
-  border: 2px solid transparent;
+  border: 0px solid transparent;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  transform: perspective(100vmax) rotateX(0) translateZ(0);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(110, 110, 110, 0.4);
 }
 
-/* 投影效果 */
-.card::before {
+.card:hover {
+  transform: perspective(100vmax) translateZ(40px) rotateX(10deg);
+  box-shadow: 0 5px 12px rgba(100, 100, 100, 0.2);
+}
+
+.card::before{
   content: "";
-  width: 90%;
-  height: 90%;
-  background-color: var(--bg-transparent);
-  /* 绝对定位 */
   position: absolute;
-  left: 5%;
-  top: 5%;
-  /* 投影 */
-  box-shadow: 0 5px 12px 12px rgba(0, 0, 0, 0.18), 
-              0 8px 24px 24px rgba(0, 0, 0, 0.01);
-  opacity: 1;
-  /* 设置旋转元素的基点位置 */
-  transform-origin: top center;
-  /* 设置过渡:时长 加速后减速 */
-  transition: 0.3s ease-in-out;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: inset 0 1px 1px -1px #fff, inset 0 0 1px #fff8;
 }
 
-/* 鼠标移上,投影的变化 */
-.card:hover::before {
-  opacity: 0.5;
-  transform: rotateX(7deg) translateY(-6px) scale(1.05);
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+  background: linear-gradient(#fff0 70%, #fff3 72%, #fff2 100%);
+  transform: rotate(-135deg) scale(1.8);
 }
+
+.card:hover::after {
+  transform: rotate(-135deg) scale(2.3) translateY(-20%);
+}
+
 
 /* 封面 */
 .card-cover {
@@ -343,36 +352,7 @@ export default {
   background-position: center;
   /* 溢出隐藏 */
   overflow: hidden;
-  /* 开启3D */
-  transform-style: preserve-3d;
-  /* 设置旋转元素的基点位置 */
-  transform-origin: top center;
-  /* 设置过渡 */
   transition: transform 0.35s ease-in-out;
-}
-
-.card-cover::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 120%;
-  /* 背景渐变(高光效果) */
-  background: linear-gradient(226deg,rgba(255,255,255,0) 40%,rgba(255,255,255,0.5) 50%,rgba(255,255,255,0) 60%);
-  /* 默认上移出可视范围 -100% */
-  transform: translateY(-100%);
-  /* 设置过渡 */
-  transition: transform 0.85s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.card:hover .card-cover {
-  transform: rotateX(7deg) translateY(-6px);
-  /*border-color: var(--theme-color);*/
-}
-
-.card:hover .card-cover::after {
-  transform: translateY(-40%);
 }
 
 .no-cover {

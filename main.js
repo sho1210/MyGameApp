@@ -1073,8 +1073,8 @@ ipcMain.on('restore-data', async (event) => {
     
     // 延迟一下让用户看到成功消息，然后重启应用
     setTimeout(() => {
-  app.relaunch();
-      app.exit();
+      //app.relaunch();
+      //app.exit();
     }, 3000);
     
   } catch (error) {
@@ -1096,8 +1096,8 @@ ipcMain.on('restore-data', async (event) => {
 // 应用重启处理程序
 ipcMain.on('restart-app', () => {
   log.info('重启应用...');
-  //app.relaunch();
-  //app.exit();
+  app.relaunch();
+  app.exit();
 });
 
 // 导出翻译模型处理程序
