@@ -307,33 +307,12 @@ export default {
   transform: perspective(100vmax) rotateX(0) translateZ(0) translateY(0);
   transition: all 0.3s ease-in-out;
   box-shadow: 0 4px 8px rgba(142, 142, 142, 0.7);
+  opacity: 1;
 }
 
 .card:hover {
   transform: perspective(100vmax) translateZ(32px) rotateX(11deg) translateY(-3px) ;
-  box-shadow: 0 5px 12px rgba(65, 65, 65, 0.4);
-}
-
-.card::before{
-  content: "";
-  position: absolute;
-  width: 90%;
-  height: 90%;
-  top: 5%;
-  left: 5%;
-  box-shadow: 0 5px 12px 12px rgba(0, 0, 0, 0.18), 
-              0 8px 24px 24px rgba(0, 0, 0, 0.01);
-  opacity: 1;
-  /* 设置旋转元素的基点位置 */
-  transform-origin: top center;
-  /* 设置过渡:时长 加速后减速 */
-  transition: 0.3s ease-in-out;
-}
-
-/* 鼠标移上,投影的变化 */
-.card:hover::before {
-  opacity: 0.5;
-  transform: rotateX(7deg) translateY(-6px) scale(1.05);
+  box-shadow: 0 5px 12px rgba(65, 65, 65, 0.2);
 }
 
 .card::after {

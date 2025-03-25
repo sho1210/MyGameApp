@@ -1,8 +1,18 @@
 <template>
   <div class="game-detail" v-if="game" :style="backgroundStyle">
     <div class="game-info">
-      <div class="game-cover">
-        <img :src="coverPath" alt="游戏封面" />
+      <div class="book">
+        <div class="inner">
+          <div class="dvd-disc">
+            <div class="dvd-ring outer" :style="cdBackgroundStyle"></div>
+            <div class="dvd-ring middle"></div>
+            <div class="dvd-ring-inner"></div>
+            <div class="dvd-center"></div>
+          </div>
+        </div>
+        <div class="cover">
+          <img :src="coverPath" alt="游戏封面" />
+        </div>
       </div>
       <div class="game-content">
         <h1 class="game-title">{{ game.name }}</h1>
@@ -53,6 +63,17 @@ export default {
       return {};
     });
 
+
+    const cdBackgroundStyle = computed(() => {
+      if (game.value && game.value.background) {
+        return {
+          backgroundImage: `url(${formatPath(game.value.background)})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        };
+      }
+      return {};
+    });
 
     // 获取游戏信息
     const fetchGameInfo = () => {
@@ -193,7 +214,7 @@ export default {
       isGameRunning,
       backgroundStyle,
       coverPath,
-      //cdBackgroundStyle,
+      cdBackgroundStyle,
       startGame,
       terminateGame
     };
@@ -234,14 +255,10 @@ export default {
   margin-top: 50px;
 }
 
-.game-cover {
-  flex: 0 0 300px;
-  margin-right: 40px;
-}
-
-.game-cover img {
+.cover img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -310,4 +327,142 @@ export default {
   color: var(--text-secondary);
   background-color: var(--bg-transparent);
 }
+
+
+/* 保留原有的.book样式不变 */
+.book {
+  position: relative;
+  border-radius: 10px;
+  width: 260px;
+  height: 390px;
+  background-color: whitesmoke;
+  -webkit-box-shadow: 1px 1px 12px #00000036;
+  box-shadow: 1px 1px 12px #0000004a;
+  -webkit-transform: preserve-3d;
+  -ms-transform: preserve-3d;
+  transform: preserve-3d;
+  -webkit-perspective: 2000px;
+  perspective: 600px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: #000;
+  transition-duration: 0.5s;
+  margin-right: 20px;
+}
+
+/* 保留原有的.cover样式不变 */
+.cover,
+.inner {
+  top: 0;
+  position: absolute;
+  background-color: lightgray;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform-origin: 0;
+  -ms-transform-origin: 0;
+  transform-origin: 0;
+  -webkit-box-shadow: 1px 1px 12px #00000057;
+  box-shadow: 1px 1px 12px #00000054;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+/* DVD光盘样式 */
+.dvd-disc {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #1e90ff, #00bfff, #87cefa);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dvd-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dvd-ring.outer {
+  width: 230px;
+  height: 230px;
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.dvd-ring.middle {
+  width: 36px;
+  height: 36px;
+  background-color: var(--dvd-middle-color);
+  border-color: #ccc;
+}
+
+.dvd-ring-inner {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  width: 30px;
+  height: 30px;
+  background-color: var(--dvd-inner-color);
+  border: none;
+}
+
+.dvd-center {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #000;
+}
+
+/* 保留原有的动画效果不变 */
+.book:hover .cover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform: rotatey(70deg);
+  -ms-transform: rotatey(70deg);
+  transform: rotatey(-70deg);
+}
+
+.inner {
+  transform-origin: 100%;
+}
+.book:hover .inner {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform: rotateZ(25deg) rotateX(-30deg) rotateY(-10deg)
+    translateX(140px);
+  -ms-transform: rotateZ(25deg) rotateX(-30deg) rotateY(-10deg)
+    translateX(140px);
+  transform: rotateZ(25deg) rotateX(-30deg) rotateY(-10deg) translateX(140px);
+  -webkit-box-shadow: 1px 1px 20px #000a;
+  box-shadow: 1px 1px 20px #000a;
+}
+
+.book:hover {
+  transform: rotateZ(-10deg);
+}
+.text {
+  font-size: 20px;
+  font-weight: 100;
+}
+
 </style>
