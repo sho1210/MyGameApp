@@ -13,11 +13,6 @@
         </div>
       </div>
     </div>
-    <div class="cd-container" :class="{ 'rotating': isGameRunning }">
-      <div class="cd-disk" :style="cdBackgroundStyle">
-        <div class="cd-inner"></div>
-      </div>
-    </div>
   </div>
   <div v-else class="loading">加载中...</div>
 </template>
@@ -58,17 +53,6 @@ export default {
       return {};
     });
 
-    // CD背景样式计算
-    const cdBackgroundStyle = computed(() => {
-      if (game.value && game.value.background) {
-        return {
-          backgroundImage: `url(${formatPath(game.value.background)})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        };
-      }
-      return {};
-    });
 
     // 获取游戏信息
     const fetchGameInfo = () => {
@@ -209,7 +193,7 @@ export default {
       isGameRunning,
       backgroundStyle,
       coverPath,
-      cdBackgroundStyle,
+      //cdBackgroundStyle,
       startGame,
       terminateGame
     };
@@ -317,65 +301,6 @@ export default {
   background: #e63329;
 }
 
-.cd-container {
-  position: absolute;
-  right: -60px;
-  bottom: -60px;
-  transform: scale(1.2);
-  z-index: 2;
-}
-
-.cd-disk {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.cd-inner {
-  width: 70px;
-  height: 70px;
-  background: var(--bg-secondary);
-  border-radius: 50%;
-  /*box-shadow: 
-    0 0 10px rgba(0, 0, 0, 0.05) inset,
-    0 2px 8px rgba(0, 0, 0, 0.1);*/
-  position: relative;
-  z-index: 3;
-}
-
-.cd-inner::after {
-  content: '';
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  background: var(--bg-primary);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 4;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) inset;
-}
-
-.rotating {
-  animation: rotate 8s linear infinite;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg) scale(1.2); }
-  to { transform: rotate(360deg) scale(1.2); }
-}
-
 .loading {
   position: fixed;
   top: 50%;
@@ -383,6 +308,6 @@ export default {
   transform: translate(-50%, -50%);
   font-size: 0px;
   color: var(--text-secondary);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-transparent);
 }
 </style>

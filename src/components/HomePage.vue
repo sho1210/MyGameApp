@@ -304,24 +304,36 @@ export default {
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  transform: perspective(100vmax) rotateX(0) translateZ(0);
+  transform: perspective(100vmax) rotateX(0) translateZ(0) translateY(0);
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(110, 110, 110, 0.4);
+  box-shadow: 0 4px 8px rgba(142, 142, 142, 0.7);
 }
 
 .card:hover {
-  transform: perspective(100vmax) translateZ(40px) rotateX(10deg);
-  box-shadow: 0 5px 12px rgba(100, 100, 100, 0.2);
+  transform: perspective(100vmax) translateZ(32px) rotateX(11deg) translateY(-3px) ;
+  box-shadow: 0 5px 12px rgba(65, 65, 65, 0.4);
 }
 
 .card::before{
   content: "";
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  box-shadow: inset 0 1px 1px -1px #fff, inset 0 0 1px #fff8;
+  width: 90%;
+  height: 90%;
+  top: 5%;
+  left: 5%;
+  box-shadow: 0 5px 12px 12px rgba(0, 0, 0, 0.18), 
+              0 8px 24px 24px rgba(0, 0, 0, 0.01);
+  opacity: 1;
+  /* 设置旋转元素的基点位置 */
+  transform-origin: top center;
+  /* 设置过渡:时长 加速后减速 */
+  transition: 0.3s ease-in-out;
+}
+
+/* 鼠标移上,投影的变化 */
+.card:hover::before {
+  opacity: 0.5;
+  transform: rotateX(7deg) translateY(-6px) scale(1.05);
 }
 
 .card::after {
@@ -332,7 +344,7 @@ export default {
   width: 100%;
   height: 100%;
   transition: transform 0.3s ease;
-  background: linear-gradient(#fff0 70%, #fff3 72%, #fff2 100%);
+  background: linear-gradient(rgba(255, 255, 255, 0.03) 70%, rgba(255, 255, 255, 0.36) 72%, rgba(255, 255, 255, 0.26) 100%);
   transform: rotate(-135deg) scale(1.8);
 }
 

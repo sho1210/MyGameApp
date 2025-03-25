@@ -1,16 +1,16 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../components/HomePage.vue';
-import GameManager from '../components/GameManager.vue';
-import GameDetail from '../components/GameDetail.vue';
-import SettingsPage from '../components/SettingsPage.vue';
-import GameInfo from '../components/GameInfo.vue';
+const Home = () => import('../components/HomePage.vue'); 
+const GameManager = () => import('../components/GameManager.vue');
+const GameDetail = () =>import('../components/GameDetail.vue');
+const SettingsPage = () =>import('../components/SettingsPage.vue');
+const GameInfo = () =>import('../components/GameInfo.vue');
 
 const routes = [
   { path: '/', component: Home, meta: { keepAlive: true } }, // 确保路径无重复定义
-  { path: '/info', component: GameInfo },
-  { path: '/settings', component: SettingsPage },
-  { path: '/manage', component: GameManager },
-  { path: '/game-detail/:cover', component: GameDetail }
+  { path: '/info', component: GameInfo, meta: { keepAlive: false } },
+  { path: '/settings', component: SettingsPage, meta: { keepAlive: false } },
+  { path: '/manage', component: GameManager, meta: { keepAlive: false } },
+  { path: '/game-detail/:cover', component: GameDetail, meta: { keepAlive: false } }
 ];
 
 const router = createRouter({

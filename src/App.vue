@@ -77,14 +77,16 @@
       </div>
       
       <!-- 主内容区域 -->
-      <div class="main-content">
-        <router-view v-slot="{ Component }">
-          <keep-alive :include="['HomePage']">
-            <component :is="Component" v-if="$route.meta.keepAlive" />
-          </keep-alive>
-          <component :is="Component" v-if="!$route.meta.keepAlive" />
-        </router-view>
-      </div>
+        <div class="main-content">
+          <router-view v-slot="{Component}">
+            <transition name="fade" mode="out-in">
+              <component 
+              :is="Component" 
+              :key="$route.path"  
+            />
+          </transition>
+       </router-view>
+     </div>
     </div>
   </div>
 </template>
@@ -134,6 +136,17 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* 路由过渡效果 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 body {
