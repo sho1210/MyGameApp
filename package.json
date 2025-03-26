@@ -1,7 +1,7 @@
 {
   "name": "mygameapp",
   "private": true,
-  "version": "2.0.9",
+  "version": "2.1.0",
   "type": "commonjs",
   "main": "main.js",
   "scripts": {

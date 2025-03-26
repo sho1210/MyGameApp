@@ -293,44 +293,43 @@ export default {
 
 .card {
   width: 136px;
-  height: 205px;
+  height: 204px;
   margin-top: 11px;
   margin-bottom: 11px;
   margin-left: 21px;
   margin-right: 19px;
   /* 设置视距 */
   perspective: 1000px;
-  border: 0px solid transparent;
+  border: 2px solid transparent;
   position: relative;
   cursor: pointer;
-  overflow: hidden;
-  transform: perspective(100vmax) rotateX(0) translateZ(0) translateY(0);
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(142, 142, 142, 0.7);
-  opacity: 1;
 }
 
-.card:hover {
-  transform: perspective(100vmax) translateZ(32px) rotateX(11deg) translateY(-3px) ;
-  box-shadow: 0 5px 12px rgba(65, 65, 65, 0.2);
-}
-
-.card::after {
+/* 投影效果 */
+.card::before {
   content: "";
+  width: 90%;
+  height: 90%;
+  background-color: var(--bg-transparent);
+  /* 绝对定位 */
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.3s ease;
-  background: linear-gradient(rgba(255, 255, 255, 0.03) 70%, rgba(255, 255, 255, 0.36) 72%, rgba(255, 255, 255, 0.26) 100%);
-  transform: rotate(-135deg) scale(1.8);
+  left: 5%;
+  top: 5%;
+  /* 投影 */
+  box-shadow: 0 5px 12px 12px rgba(0, 0, 0, 0.18), 
+              0 8px 24px 24px rgba(0, 0, 0, 0.01);
+  opacity: 1;
+  /* 设置旋转元素的基点位置 */
+  transform-origin: top center;
+  /* 设置过渡:时长 加速后减速 */
+  transition: 0.3s ease-in-out;
 }
 
-.card:hover::after {
-  transform: rotate(-135deg) scale(2.3) translateY(-20%);
+/* 鼠标移上,投影的变化 */
+.card:hover::before {
+  opacity: 0.5;
+  transform: rotateX(7deg) translateY(-6px) scale(1.05);
 }
-
 
 /* 封面 */
 .card-cover {
@@ -343,7 +342,35 @@ export default {
   background-position: center;
   /* 溢出隐藏 */
   overflow: hidden;
+  /* 开启3D */
+  transform-style: preserve-3d;
+  /* 设置旋转元素的基点位置 */
+  transform-origin: top center;
+  /* 设置过渡 */
   transition: transform 0.35s ease-in-out;
+}
+
+.card-cover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 120%;
+  /* 背景渐变(高光效果) */
+  background: linear-gradient(rgba(255, 255, 255, 0.03) 70%, rgba(255, 255, 255, 0.36) 72%, rgba(255, 255, 255, 0.26) 100%);
+  transform: rotate(-145deg) scale(1.8);
+  /* 设置过渡 */
+  transition: transform 0.65s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card:hover .card-cover {
+  transform: rotateX(7deg) translateY(-6px);
+  /*border-color: var(--theme-color);*/
+}
+
+.card:hover .card-cover::after {
+  transform: rotate(-145deg) scale(2.3) translateY(-16.5%);
 }
 
 .no-cover {
