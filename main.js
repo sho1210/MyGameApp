@@ -9,6 +9,7 @@ const themeConfig = require('./utils/themeConfig');
 const translationService = require('./utils/translationService');
 const gameInfoService = require('./utils/getinfoService');
 const { log, initLog } = require('./utils/logConfig');
+const edge = require('electron-edge-js');
 
 // 帮助函数：获取Python脚本的正确路径
 function getPythonScriptPath(scriptName) {
@@ -644,7 +645,12 @@ const killProcessTree = async (pid) => {
         process.kill(child.PID);
         log.info(`已终止子进程: ${child.PID} (${child.COMMAND})`);
       } catch (err) {
-        log.error(`终止子进程 ${child.PID} 失败:`, err);
+        // 如果进程不存在(ESRCH)，视为已经终止，不算作错误
+        if (err.code === 'ESRCH') {
+          log.info(`子进程 ${child.PID} 已不存在，视为已终止`);
+        } else {
+          log.error(`终止子进程 ${child.PID} 失败:`, err);
+        }
       }
     }
     
@@ -653,7 +659,12 @@ const killProcessTree = async (pid) => {
       process.kill(pid);
       log.info(`已终止主进程: ${pid}`);
     } catch (err) {
-      log.error(`终止主进程 ${pid} 失败:`, err);
+      // 如果进程不存在(ESRCH)，视为已经终止，不算作错误
+      if (err.code === 'ESRCH') {
+        log.info(`主进程 ${pid} 已不存在，视为已终止`);
+      } else {
+        log.error(`终止主进程 ${pid} 失败:`, err);
+      }
     }
     
     return true;
@@ -739,7 +750,7 @@ ipcMain.on('launch-game', (event, gameInfo) => {
           
           // 检查游戏是否快速退出
           const exitDiagnostics = {
-            quickExit: runTime < 1,
+            quickExit: runTime < 2,
             exitCode: code,
             workingDirectoryExists: true,
             fileExists: true
@@ -804,6 +815,95 @@ ipcMain.on('launch-game', (event, gameInfo) => {
       });
     };
     
+    // 使用electron-edge.js和C#启动游戏的函数
+    const launchGameWithCSharp = () => {
+      return new Promise((resolve, reject) => {
+        log.info(`尝试使用C#启动游戏 ${gameInfo.name}`);
+        
+        try {
+          // 定义C#代码
+          const csharpCode = `
+          using System;
+          using System.Diagnostics;
+          using System.Threading.Tasks;
+          
+          public class Startup
+          {
+              public async Task<object> Invoke(dynamic input)
+              {
+                  try
+                  {
+                      var startInfo = new ProcessStartInfo();
+                      startInfo.FileName = (string)input.fileName;
+                      startInfo.WorkingDirectory = (string)input.workingDirectory;
+                      startInfo.UseShellExecute = true;
+                      
+                      var process = Process.Start(startInfo);
+                      return new {
+                          success = true,
+                          pid = process.Id,
+                          message = "游戏通过C#代码成功启动"
+                      };
+                  }
+                  catch (Exception ex)
+                  {
+                      return new {
+                          success = false,
+                          pid = 0,
+                          message = "C#启动失败: " + ex.Message
+                      };
+                  }
+              }
+          }
+          `;
+          
+          // 编译并执行C#代码
+          const launchWithCSharp = edge.func(csharpCode);
+          
+          // 准备传递给C#的参数
+          const gameParams = {
+            fileName: gameInfo.fileName,
+            workingDirectory: gameInfo.workingDirectory,
+            args: gameInfo.args || []
+          };
+          
+          // 执行C#函数
+          launchWithCSharp(gameParams, (error, result) => {
+            if (error) {
+              log.error(`使用C#启动游戏失败:`, error);
+              reject(new Error(`C#启动失败: ${error.message}`));
+              return;
+            }
+            
+            if (!result.success) {
+              log.error(`C#启动游戏返回失败:`, result.message);
+              reject(new Error(result.message));
+              return;
+            }
+            
+            // 创建进程信息对象
+            const processInfo = {
+              id: result.pid,
+              name: gameInfo.name,
+              startTime: new Date().toLocaleString(),
+              useShell: true,
+              launchMethod: 'csharp',
+              process: { pid: result.pid }  // 添加process对象，确保包含pid属性
+            };
+            
+            // 将进程信息存储到全局Map中
+            runningGames.set(gameInfo.name, processInfo);
+            
+            log.info(`游戏 ${gameInfo.name} 已通过C#代码成功启动，PID: ${result.pid}`);
+            resolve(processInfo);
+          });
+        } catch (error) {
+          log.error(`初始化C#启动函数失败:`, error);
+          reject(error);
+        }
+      });
+    };
+    
     // 尝试启动游戏的主函数
     const tryLaunchGame = async () => {
       try {
@@ -822,10 +922,18 @@ ipcMain.on('launch-game', (event, gameInfo) => {
         // 检查文件扩展名
         const fileExt = path.extname(gameInfo.fileName).toLowerCase();
         
-        // 对.bat、.sh和.link文件强制使用shell执行
-        const shouldUseShell = fileExt === '.bat' || fileExt === '.sh' || fileExt === '.link';
+        // 检查是否为Steam或Epic游戏（通过工作目录路径判断）
+        const workingDir = gameInfo.workingDirectory.toLowerCase();
+        const isSteamGame = workingDir.includes('steam') || workingDir.includes('steamlibrary');
+        const isEpicGame = workingDir.includes('epic') || workingDir.includes('epicgames');
         
-        if (shouldUseShell) {
+        // 如果是Steam或Epic游戏，直接使用C#方式启动
+        if (isSteamGame || isEpicGame) {
+          log.info(`检测到${isSteamGame ? 'Steam' : 'Epic'}游戏，使用C#方式直接启动游戏 ${gameInfo.name}`);
+          processInfo = await launchGameWithCSharp();
+        }
+        // 对.bat、.sh和.link文件强制使用shell执行
+        else if (fileExt === '.bat' || fileExt === '.sh' || fileExt === '.link') {
           // 如果是特殊脚本文件，直接使用shell启动
           log.info(`检测到脚本文件(${fileExt})，使用shell模式启动游戏 ${gameInfo.name}`);
           processInfo = await launchGameProcess(true);
@@ -840,7 +948,13 @@ ipcMain.on('launch-game', (event, gameInfo) => {
           } catch (error) {
             // 如果失败，尝试使用shell启动
             log.info('第一次启动失败，尝试使用shell重新启动');
-            processInfo = await launchGameProcess(true);
+            try {
+              processInfo = await launchGameProcess(true);
+            } catch (shellError) {
+              // 如果shell方式也失败，尝试使用C#启动
+              log.info('Shell启动也失败，尝试使用C#代码启动游戏');
+              processInfo = await launchGameWithCSharp();
+            }
           }
         }
         
@@ -893,7 +1007,8 @@ ipcMain.on('terminate-game', async (event, gameName) => {
       throw new Error(`找不到运行中的游戏: ${gameName}`);
     }
     
-    const pid = gameInfo.process.pid;
+    // 获取进程ID，兼容不同启动方式
+    const pid = gameInfo.process ? gameInfo.process.pid : gameInfo.id;
     const result = await killProcessTree(pid);
     
     event.sender.send('terminate-game-reply', {
@@ -1070,12 +1185,6 @@ ipcMain.on('restore-data', async (event) => {
       success: true,
       message: '数据已成功恢复，应用需要重启以加载新数据'
     });
-    
-    // 延迟一下让用户看到成功消息，然后重启应用
-    setTimeout(() => {
-      //app.relaunch();
-      //app.exit();
-    }, 3000);
     
   } catch (error) {
     log.error('恢复数据失败:', error);

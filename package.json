@@ -1,7 +1,7 @@
 {
   "name": "mygameapp",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "commonjs",
   "main": "main.js",
   "scripts": {
@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "better-sqlite3": "^11.8.1",
+    "electron-edge-js": "^35.0.0",
     "electron-log": "^5.3.2",
     "form-data": "^4.0.0",
     "fs-extra": "^11.2.0",

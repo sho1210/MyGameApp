@@ -256,7 +256,8 @@ body {
   left: 35px; /* 默认侧边栏宽度 */
   right: 0;
   height: 40px;
-  background-color: var(--header-bg);
+  background-color: var(--tr-header-bg);
+  backdrop-filter: blur(10px);
   display: flex;
   justify-content: space-between;
   align-items: center;
